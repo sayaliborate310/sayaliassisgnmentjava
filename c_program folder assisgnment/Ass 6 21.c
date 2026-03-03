@@ -1,12 +1,10 @@
  /*4 Check the given number is prime or not.
 Input: n = 7
-Output: Prime*/
+Output: Prime w/o return type with parameter*/
 #include<stdio.h>
-void main()
-{
-	int i,n,flag=0;
-	printf("enter the no \n:");
-	scanf("%d",&n);
+void isprime(int n)
+{     
+     int i,flag=0;
 	if(n<=1)
 	{
 		printf("no is not prime");
@@ -29,6 +27,13 @@ void main()
 		{
 			printf("no is not prime \n");
 		}
-	}
+	}	
+}
+void main()
+{
+	int n;
+	printf("enter the no \n:");
+	scanf("%d",&n);
+    isprime(n);
 	
 }
