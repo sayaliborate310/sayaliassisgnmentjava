@@ -1,0 +1,133 @@
+                            Assisgnment -2 MYSQL
+
+Q1) Create the tables Member, Books, and Issue WITHOUT constraints.
+mysql> create table memeber(member_id int,member_name varchar(20),member_add varchar(20),accopen_date date,membership_type varchar(20),fees_paid decimal(10,2),max_books int,penalty_amt decimal(10,2));
+
+ create table books(book_no int,book_name varchar(20),author_name varchar(20),cost decimal(10,2),category varchar(20));
+
+ create table issue(libissue_id int,book_no int,member_id int,issue_date date,return_date date);
+
+Q2) Display the structure of all three tables using DESC.
+mysql> desc memeber;
+
+mysql> desc books;
+
+mysql> desc issue;
+
+Q3) Drop the Member table.
+mysql> drop table memeber;
+
+Q4) Create the Member table again with these constraints:
+- Member_Id must be PRIMARY KEY
+- Membership_Type must allow only:
+('Lifetime','Annual','Half Yearly','Quarterly')
+mysql> create table member(mem_id int primary key,membership_type varchar(20) check(membership_type IN ('Lifetime','Annual','Half Yearly','Quarterly')));
+
+Q5) Alter Member table to increase Member_Name size from 30 to 40.
+mysql> alter table member add column mem_name varchar(40);
+
+Q6) Add a column Reference (VARCHAR (30)) to Issue table.
+mysql> alter table issue add column reference varchar(40);
+
+Q7) Drop the column Reference from Issue table.
+mysql> alter table issue drop column reference;
+
+Q8) Rename the table Issue to Lib_Issue.
+mysql> alter table issue rename to lib_issue;
+
+Q9) Insert the following records into Member table:
+1. mysql> insert into memeber values(1,"richa","pune","2025-12-10",25000,5,50,"lifetime");
+
+2.mysql> insert into memeber(member_id,member_name,member_add,accopen_date,fees_paid,max_books,membership_type)values(2,"garima","pune","2026-09-03",1000,3,"Annual");
+
+Q10) Insert at least 5 more records with suitable data into Member table.
+ mysql> insert into memeber values(3,"sahil","mumbai","2025-10-25",12000,5,50,"lifetime");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into memeber values(4,"sayali","delhi","2025-11-20",9000,6,100,"annual");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into memeber values(5,"sisha","punjab","2025-05-13",7000,4,50,"lifetime");
+Query OK, 1 row affected (0.01 sec)
+
+Q11) Try to decrease Member_Name size from 40 to 20.
+If it fails, mention the reason.
+mysql> alter table memeber modify member_name varchar(2);
+ERROR 1265 (01000): Data truncated for column 'member_name' at row 1.
+
+Q12) Add a CHECK constraint:
+Max_Books_Allowed must be less than 100.
+
+mysql> alter table memeber modify max_books int check(max_books<100);
+
+Q13) Create a backup table named MemberBackup using the Member table.
+Use the following query:
+CREATE TABLE MemberBackup AS
+SELECT * FROM Member;
+
+mysql> create table memberbackup as select * from memeber;
+
+Q14) Add named constraints:
+- Max_Books_Allowed < 100
+- Penalty_Amount <= 1000
+
+mysql> alter table memeber modify max_books int check(max_books<100), modify penalty_amt decimal(10,2) check(penalty_amt<=1000);
+
+Q15) Drop the Books table.
+mysql> drop table books;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> table books;
+ERROR 1146 (42S02): Table 'ass2.books' doesn't exist
+
+Q16) Create Books table again with constraints:
+- Book_No PRIMARY KEY
+- Book_Name NOT NULL
+- Category must be one of:
+('System','Fiction','Database','RDBMS','Others','Science')
+
+mysql> create table book(book_no int primary key,book_name varchar(25),category varchar(20) check(category IN('System','Fiction','Database','RDBMS','Others','Science')));
+
+Q17) Insert the following data into Books table:
+mysql> alter table book add auth_name varchar(20),add cost int;
+
+mysql> insert into book values(1,"let us c","system","dennis ritchie",450);
+mysql> insert into book values(2,"oracle complete ref","Database","loni",550);
+mysql> insert into book values(3,"mastering sql","Database","loni",650);
+mysql> insert into book values(4,"PL sql ref","Database","squtt urman",750);
+mysql> insert into book values(5,"national reference","science","adis scott",1000);
+
+Q19) View all data from Member and Books tables using SELECT.
+mysql> select * from memeber;
+mysql> select * from book;
+
+Q20) Drop Lib_Issue table.
+mysql> drop table lib_issue;
+
+Q21) Create Issue table again with constraints:
+- Lib_Issue_Id PRIMARY KEY
+- Book_No FOREIGN KEY REFERENCES Books(Book_No)
+- Member_Id FOREIGN KEY REFERENCES Member(Member_Id)
+mysql> create table issue(lib_issue_id int primary key,book_no int,member_id int,issue_date date);
+
+mysql> create table issue(lib_issue_id int primary key,book_no int,member_id int,issue_date date,foreign key(book_no) references book(book_no),foreign key(member_id) references memeber(member_id));
+
+Q23) Try inserting an Issue record with Member_Id not existing in Member table.
+Observe and write the error.
+mysql> insert into issue values(7006,5,10,"2025-04-18");
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`ass2`.`issue`, CONSTRAINT `issue_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `memeber` (`member_id`))
+
+Q24) Try deleting Member_Id = 1 from Member table.
+Observe and write the foreign key error.
+mysql> delete from memeber where member_id= 1;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`ass2`.`issue`, CONSTRAINT `issue_ibfk_2` FOREIGN KEY (`member_id`) REFERENCES `memeber` (`member_id`))
+
+
+
+
+
+
+
+
+
+
